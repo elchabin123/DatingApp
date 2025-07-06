@@ -4,6 +4,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using API.Models;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -12,16 +14,16 @@ namespace API.Controllers
   public class MembersController(AppDbContext context) : ControllerBase
   {
     [HttpGet]
-    public ActionResult<IReadOnlyList<AppUser>> GetMembers()
+    public async Task<ActionResult<IReadOnlyList<AppUser>>> GetMembers()
     {
-      var members = context.Users.ToList();
+      var members = await context.Users.ToListAsync();
       return members;
     }
 
     [HttpGet("{id}")]
-    public ActionResult<AppUser> GetMember(string id)
+    public async Task<ActionResult<AppUser>> GetMember(string id)
     {
-      var member = context.Users.Find(id);
+      var member = await context.Users.FindAsync(id);
       if (member == null)
       {
         return NotFound();
